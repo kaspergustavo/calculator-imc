@@ -1,35 +1,64 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState } from 'react';
+import './App.css'; // Certifique-se de que o CSS está sendo importado
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [altura, setAltura] = useState('');
+  const [peso, setPeso] = useState('');
+  const [imc, setImc] = useState(null);
+  const [classificacao, setClassificacao] = useState('');
+
+  const calcularIMC = () => {
+    if (altura > 0 && peso > 0) {
+      const alturaMetros = altura / 100;
+      const imcCalculado = peso / (alturaMetros * alturaMetros);
+
+      setImc(imcCalculado.toFixed(2));
+
+      if (imcCalculado < 18.5) {
+        setClassificacao('Abaixo do peso.');
+      } else if (imcCalculado >= 18.5 && imcCalculado < 24.9) {
+        setClassificacao('Peso normal.');
+      } else if (imcCalculado >= 25 && imcCalculado < 29.9) {
+        setClassificacao('Acima do peso.');
+      } else if (imcCalculado >= 30 && imcCalculado < 34.9) {
+        setClassificacao('Obesidade de Grau 1.');
+      } else if (imcCalculado >= 35 && imcCalculado < 39.9) {
+        setClassificacao('Obesidade de Grau 2.');
+      } else {
+        setClassificacao('Obesidade de Grau 3.');
+      }
+    }
+  };
 
   return (
-    <>
+    <div className="App">
+      <h1>Calculadora de IMC</h1>
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <label>Altura (cm): </label>
+        <input
+          type="number"
+          value={altura}
+          onChange={(e) => setAltura(e.target.value)}
+        />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
+      <div>
+        <label>Peso (kg): </label>
+        <input
+          type="number"
+          value={peso}
+          onChange={(e) => setPeso(e.target.value)}
+        />
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+      <button onClick={calcularIMC}>Calcular IMC</button>
+
+      {imc && (
+        <div>
+          <h3>Seu IMC é: {imc}</h3>
+          <p>Classificação: {classificacao}</p>
+        </div>
+      )}
+    </div>
+  );
 }
 
-export default App
+export default App;
